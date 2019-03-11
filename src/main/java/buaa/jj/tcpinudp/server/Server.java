@@ -12,9 +12,11 @@ import java.util.UUID;
 
 public class Server extends KcpServer {
 
+    private boolean debug = false;
     private int serverPort;
     public Server(int port, int workerSize, int serverPort) {
         super(port, workerSize);
+        setStream(true);
         this.serverPort = serverPort;
     }
 
@@ -36,10 +38,21 @@ public class Server extends KcpServer {
             os = client.socket.getOutputStream();
             byte[] bytes = new byte[byteBuf.readableBytes()];
             byteBuf.getBytes(0,bytes);
-            os.write(bytes);
-            os.flush();
+            String s = new String(bytes,"UTF-8");
+            System.out.println(s);
+            if (s.equals("client is closed")) {
+                System.out.println("收到客户端断开的通知，断开本地连接");
+                client.interrupt();
+            } else {
+                if (debug)
+                    System.out.println("recv:" + byteBuf.toString());
+                os.write(bytes);
+                os.flush();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            client.state = true;
+            client.interrupt();
+            System.out.println("服务器端已断开连接，已告知远端客户端");
         }
     }
 

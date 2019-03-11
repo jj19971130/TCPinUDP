@@ -11,10 +11,12 @@ public class Server extends Thread {
 
     Client client;
     Socket socket;
+    boolean state;
+    boolean debug = false;
 
     Server(String server, int port, Socket socket) throws IOException {
-        client = new Client(server, port, socket);
         this.socket = socket;
+        client = new Client(server, port, this);
     }
 
     @Override
@@ -27,21 +29,26 @@ public class Server extends Thread {
                     byte[] bytes = new byte[is.available()];
                     is.read(bytes);
                     bb.writeBytes(bytes);
+                    if (debug)
+                        System.out.println("recv:" + bb.toString());
                     client.send(bb);
-                    //bb.release();
                 }
-                /*try {
-                    socket.sendUrgentData(1);
-                } catch (IOException e) {
-                    System.out.println("本地客户端已断开连接");
-                    is.close();
-                    socket.close();
-                    client.close();
-                    break;
-                }*/
             }
+            is.close();
+            socket.close();
+            if (state) {
+                ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
+                bb.writeBytes("client is closed".getBytes());
+                client.send(bb);
+            }
+            client.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                socket.close();
+                System.out.println("无法连接到服务器端，本地连接已断开");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
     }

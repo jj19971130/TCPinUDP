@@ -6,6 +6,7 @@ import java.net.Socket;
 
 public class Main {
     public static void main(String args[]) throws IOException {
+        System.out.println(new String("client is closed".getBytes(),"UTF-8"));
         int localport = Integer.valueOf(args[0]);
         String server = args[1];
         int port = Integer.valueOf(args[2]);
