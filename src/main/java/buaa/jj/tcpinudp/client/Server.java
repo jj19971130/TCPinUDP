@@ -1,6 +1,9 @@
 package buaa.jj.tcpinudp.client;
 
-import java.io.IOException;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -16,6 +19,29 @@ public class Server extends Thread {
 
     @Override
     public void run() {
+        try {
+            InputStream is = socket.getInputStream();
+            ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
+            while (!isInterrupted()) {
+                while (is.available() != 0) {
+                    byte[] bytes = new byte[is.available()];
+                    is.read(bytes);
+                    bb.writeBytes(bytes);
+                    client.send(bb);
+                }
+                try {
+                    socket.sendUrgentData(1);
+                } catch (IOException e) {
+                    System.out.println("本地客户端已断开连接");
+                    is.close();
+                    socket.close();
+                    client.close();
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

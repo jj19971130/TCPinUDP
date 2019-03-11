@@ -14,7 +14,7 @@ public class Main {
         while (true) {
             Socket socket = serverSocket.accept();
             System.out.println("连接尝试打开");
-            new Server(server,port,socket).run();
+            new Server(server,port,socket).start();
         }
     }
 }

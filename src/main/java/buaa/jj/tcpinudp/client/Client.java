@@ -18,6 +18,7 @@ public class Client extends KcpClient {
         this.socket = socket;
         connect(new InetSocketAddress(server,port));
         start();
+        System.out.println("和" + server + ":" + port + "的连接建立成功");
     }
 
     public void handleReceive(ByteBuf byteBuf, KcpOnUdp kcpOnUdp) {
@@ -32,10 +33,5 @@ public class Client extends KcpClient {
 
     public void handleException(Throwable throwable, KcpOnUdp kcpOnUdp) {
         System.out.println(throwable);
-    }
-
-    @Override
-    public void run() {
-        super.run();
     }
 }
