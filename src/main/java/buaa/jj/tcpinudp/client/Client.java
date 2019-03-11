@@ -24,8 +24,11 @@ public class Client extends KcpClient {
     public void handleReceive(ByteBuf byteBuf, KcpOnUdp kcpOnUdp) {
         try {
             OutputStream os = socket.getOutputStream();
-            os.write(byteBuf.array());
+            byte[] bytes = new byte[byteBuf.readableBytes()];
+            byteBuf.getBytes(0,bytes);
+            os.write(bytes);
             os.flush();
+            //byteBuf.release();
         } catch (IOException e) {
             e.printStackTrace();
         }

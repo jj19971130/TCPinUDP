@@ -9,5 +9,8 @@
         <module name="TCPinUDP" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="TCPinUDP" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>

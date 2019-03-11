@@ -34,7 +34,9 @@ public class Server extends KcpServer {
         OutputStream os = null;
         try {
             os = client.socket.getOutputStream();
-            os.write(byteBuf.array());
+            byte[] bytes = new byte[byteBuf.readableBytes()];
+            byteBuf.getBytes(0,bytes);
+            os.write(bytes);
             os.flush();
         } catch (IOException e) {
             e.printStackTrace();

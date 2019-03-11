@@ -21,15 +21,16 @@ public class Server extends Thread {
     public void run() {
         try {
             InputStream is = socket.getInputStream();
-            ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
             while (!isInterrupted()) {
                 while (is.available() != 0) {
+                    ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
                     byte[] bytes = new byte[is.available()];
                     is.read(bytes);
                     bb.writeBytes(bytes);
                     client.send(bb);
+                    //bb.release();
                 }
-                try {
+                /*try {
                     socket.sendUrgentData(1);
                 } catch (IOException e) {
                     System.out.println("本地客户端已断开连接");
@@ -37,7 +38,7 @@ public class Server extends Thread {
                     socket.close();
                     client.close();
                     break;
-                }
+                }*/
             }
         } catch (IOException e) {
             e.printStackTrace();

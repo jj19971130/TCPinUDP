@@ -41,14 +41,15 @@ public class Client extends Thread {
     public void run() {
         try {
             InputStream is = socket.getInputStream();
-            ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
             while (!isInterrupted()) {
                 while (is.available() != 0) {
+                    ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
                     byte[] bytes = new byte[is.available()];
                     is.read(bytes);
                     bb.writeBytes(bytes);
                     String s = "make ide happy";
                     server.send(bb);
+                    //bb.release();
                 }
             }
             is.close();
