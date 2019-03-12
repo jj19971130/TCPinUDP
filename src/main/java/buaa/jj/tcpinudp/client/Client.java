@@ -21,7 +21,7 @@ public class Client extends KcpClient {
         setStream(true);
         this.socket = server.socket;
         this.server = server;
-        connect(new InetSocketAddress(serverip,port));
+        connect(new InetSocketAddress(serverip,port),new InetSocketAddress("::1",50000));
         start();
         System.out.println("和" + serverip + ":" + port + "的连接建立成功");
     }

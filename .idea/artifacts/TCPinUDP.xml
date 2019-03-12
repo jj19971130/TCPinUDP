@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="TCPinUDP">
+    <output-path>$PROJECT_DIR$/out/artifacts/TCPinUDP</output-path>
+    <root id="archive" name="TCPinUDP.jar">
+      <element id="module-output" name="TCPinUDP" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.17.Final/netty-all-4.1.17.Final.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
