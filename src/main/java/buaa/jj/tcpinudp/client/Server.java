@@ -23,7 +23,7 @@ public class Server extends Thread {
     public void run() {
         try {
             InputStream is = socket.getInputStream();
-            while (!isInterrupted()) {
+            while (!interrupted()) {
                 while (is.available() != 0) {
                     ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
                     byte[] bytes = new byte[is.available()];
@@ -34,14 +34,16 @@ public class Server extends Thread {
                     client.send(bb);
                 }
             }
+
             is.close();
             socket.close();
             if (state) {
                 ByteBuf bb = PooledByteBufAllocator.DEFAULT.buffer(1500);
                 bb.writeBytes("client is closed".getBytes());
                 client.send(bb);
+                System.out.println("客户端已断开连接，已告知远端服务器");
             }
-            client.close();
+            client.tryToClose();
         } catch (IOException e) {
             try {
                 socket.close();
@@ -49,6 +51,8 @@ public class Server extends Thread {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
     }

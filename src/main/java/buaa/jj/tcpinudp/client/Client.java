@@ -15,6 +15,7 @@ public class Client extends KcpClient {
     private Server server;
     private Socket socket;
     private boolean debug=false;
+    private boolean state=false;
 
     Client(String serverip,int port,Server server) throws IOException {
         setStream(true);
@@ -26,6 +27,7 @@ public class Client extends KcpClient {
     }
 
     public void handleReceive(ByteBuf byteBuf, KcpOnUdp kcpOnUdp) {
+        state = false;
         try {
             OutputStream os = socket.getOutputStream();
             byte[] bytes = new byte[byteBuf.readableBytes()];
@@ -42,12 +44,22 @@ public class Client extends KcpClient {
                 os.flush();
             }
             //byteBuf.release();
+            return;
         } catch (IOException e) {
-            close();
-            server.state = true;
-            server.interrupt();
-            System.out.println("客户端已断开连接，已告知远端服务器");
+            if (!e.getMessage().equals("Socket is closed")) {
+                server.state = true;
+                server.interrupt();
+            }
         }
+    }
+
+    public void tryToClose() throws InterruptedException {
+        while (!state) {
+            state = true;
+            Thread.sleep(5);
+        }
+        System.out.println("确认远端服务器已断开，本地连接断开");
+        close();
     }
 
     public void handleException(Throwable throwable, KcpOnUdp kcpOnUdp) {

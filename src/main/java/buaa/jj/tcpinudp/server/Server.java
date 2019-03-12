@@ -39,7 +39,6 @@ public class Server extends KcpServer {
             byte[] bytes = new byte[byteBuf.readableBytes()];
             byteBuf.getBytes(0,bytes);
             String s = new String(bytes,"UTF-8");
-            System.out.println(s);
             if (s.equals("client is closed")) {
                 System.out.println("收到客户端断开的通知，断开本地连接");
                 client.interrupt();
