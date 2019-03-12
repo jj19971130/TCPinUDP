@@ -15,7 +15,10 @@ public class Main {
         while (true) {
             Socket socket = serverSocket.accept();
             System.out.println("连接尝试打开");
-            new Server(server,port,socket).start();
+            if (args.length >= 4)
+                new Server(server,port,socket,Integer.valueOf(args[3])).start();
+            else
+                new Server(server,port,socket,0).start();
         }
     }
 }

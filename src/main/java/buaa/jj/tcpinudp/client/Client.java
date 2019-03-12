@@ -17,11 +17,12 @@ public class Client extends KcpClient {
     private boolean debug=false;
     private boolean state=false;
 
-    Client(String serverip,int port,Server server) throws IOException {
+    Client(String serverip,int port,Server server,int localport) throws IOException {
+        super(localport);
         setStream(true);
         this.socket = server.socket;
         this.server = server;
-        connect(new InetSocketAddress(serverip,port),new InetSocketAddress("::1",50000));
+        connect(new InetSocketAddress(serverip,port));
         start();
         System.out.println("和" + serverip + ":" + port + "的连接建立成功");
     }

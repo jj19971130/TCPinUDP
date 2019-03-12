@@ -14,9 +14,9 @@ public class Server extends Thread {
     boolean state;
     boolean debug = false;
 
-    Server(String server, int port, Socket socket) throws IOException {
+    Server(String server, int port, Socket socket,int localport) throws IOException {
         this.socket = socket;
-        client = new Client(server, port, this);
+        client = new Client(server, port, this,localport);
     }
 
     @Override

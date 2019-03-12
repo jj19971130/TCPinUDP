@@ -194,7 +194,8 @@ public abstract class KcpClient implements Output, KcpListerner, Runnable
     public void connect(InetSocketAddress addr, InetSocketAddress addr2)
     {
         this.remote = addr;
-        this.channel.connect(addr,addr2);
+        this.channel.connect(addr);
+        this.channel.bind(addr2);
     }
 
     @Override
